@@ -13,8 +13,7 @@ public class MinMaxNode {
     protected State state;
     protected Turn turn;
     protected MinMaxNode parent;
-    protected Double score;
-    protected AIPlayer player;
+    protected Double score = null;
     protected ArrayList<MinMaxNode> children;
     protected int depthLeft;
     protected int playerNumber;
@@ -25,17 +24,15 @@ public class MinMaxNode {
         children = new ArrayList<>();
         state = new State(parent.state);
         this.turn = turn;
-        player = (AIPlayer) (parent.player==parent.state.getPlayer1() ? state.getPlayer1() : state.getPlayer2());
+        state.playTurn(turn);
         playerNumber = parent.playerNumber;
         currentPlayerNumber = state.getCurrentPlayerNumber();
-        state.playTurn(turn);
         depthLeft = depth;
     }
 
     public MinMaxNode(State state, AIPlayer player, int depth){
         parent = null;
         this.state = new State(state);
-        this.player = player;
         playerNumber = player==state.getPlayer1() ? 1 : 2;
         currentPlayerNumber = playerNumber;
         children = new ArrayList<>();
@@ -44,10 +41,11 @@ public class MinMaxNode {
 
     public Turn getTurn(){
         getScore();
-//        for(MinMaxNode child: children){
-//            System.out.println(child.getScore());
+//        for (int i = 0; i < children.size(); i++) {
+//            System.out.println(children.get(i).turn.getCoord());
+//            System.out.println(children.get(i).getScore());
 //        }
-        //Collections.shuffle(children);
+        Collections.shuffle(children);
         return Collections.max(children, Comparator.comparing(MinMaxNode::getScore)).turn;
     }
 
@@ -59,14 +57,13 @@ public class MinMaxNode {
         for(MinMaxNode child : children){
             child.children = null;
         }
-        player = null;
         parent = null;
     }
 
     public double getScore(){
         if(score!= null) return score;
         if(depthLeft==0 || state.getWinner()!=null){
-            setScore(currentPlayer().getScoring().getScoreFor(currentPlayer(),currentEnemy(),state));
+            setScore(currentPlayer().getScoring().getScoreFor(playerNumber==1 ? state.getPlayer1() : state.getPlayer2(),playerNumber==1 ? state.getPlayer2() : state.getPlayer1(),state));
         } else {
             List<Turn> turns = state.possibleTurns();
             int childDepth = turns.get(0).getType()== Turn.TurnType.REMOVE ? depthLeft : depthLeft-1;
@@ -76,10 +73,12 @@ public class MinMaxNode {
                 child.setScore(child.getScore());
             }
             //setScore(sum(children)); //DEBUG
-            if (currentPlayerNumber != playerNumber) {
+            if (currentPlayerNumber == playerNumber) {
                 setScore(Collections.max(children, Comparator.comparing(MinMaxNode::getScore)).getScore());
+                //System.out.println("max" + depthLeft);
             } else {
                 setScore(Collections.min(children, Comparator.comparing(MinMaxNode::getScore)).getScore());
+                //System.out.println("Min" + depthLeft);
             }
 
         }
@@ -94,9 +93,6 @@ public class MinMaxNode {
         return (result*depthLeft)/c.size();
     }
 
-    private Player enemy(){
-        return player==state.getPlayer1() ? state.getPlayer2() : state.getPlayer1();
-    }
     protected AIPlayer currentPlayer(){
         return (AIPlayer) (playerNumber==1 ? state.getPlayer1() : state.getPlayer2());
     }

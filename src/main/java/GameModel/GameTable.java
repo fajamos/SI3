@@ -242,4 +242,106 @@ public class GameTable {
         }
         return mills;
     }
+
+    public int checkAlmostMill(Player player){
+        int result = 0;
+
+        int resultOuter = 0;
+        int resultMiddle = 0;
+        int resultInner = 0;
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,0,0));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,0,0));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,0,0));
+
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,1,0));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,1,0));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,1,0));
+
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,2,0));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,2,0));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,2,0));
+
+        result += (resultInner%3)/2 + (resultMiddle%3)/2 + (resultOuter%3)/2; //IF 2 then 1 if 1 then 0
+
+        resultOuter = 0;
+        resultMiddle = 0;
+        resultInner = 0;
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,0,2));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,0,2));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,0,2));
+
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,1,2));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,1,2));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,1,2));
+
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,2,2));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,2,2));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,2,2));
+
+        result += (resultInner%3)/2 + (resultMiddle%3)/2 + (resultOuter%3)/2; //IF 2 then 1 if 1 then 0
+
+        resultOuter = 0;
+        resultMiddle = 0;
+        resultInner = 0;
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,0,0));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,0,0));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,0,0));
+
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,0,1));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,0,1));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,0,1));
+
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,0,2));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,0,2));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,0,2));
+
+        result += (resultInner%3)/2 + (resultMiddle%3)/2 + (resultOuter%3)/2; //IF 2 then 1 if 1 then 0
+        resultOuter = 0;
+        resultMiddle = 0;
+        resultInner = 0;
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,2,0));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,2,0));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,2,0));
+
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,2,1));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,2,1));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,2,1));
+
+        resultOuter += playerNullEnemy(player,new Coord(OUTER,2,2));
+        resultMiddle += playerNullEnemy(player,new Coord(MIDDLE,2,2));
+        resultInner += playerNullEnemy(player,new Coord(MIDDLE,2,2));
+
+        result += (resultInner%3)/2 + (resultMiddle%3)/2 + (resultOuter%3)/2; //IF 2 then 1 if 1 then 0
+
+        int resultTop = 0;
+        int resultBottom = 0;
+        int resultLeft = 0;
+        int resultRight = 0;
+        resultTop+= playerNullEnemy(player,new Coord(OUTER,1,0));
+        resultBottom+= playerNullEnemy(player,new Coord(OUTER,1,2));
+        resultLeft+= playerNullEnemy(player,new Coord(OUTER,0,1));
+        resultRight+= playerNullEnemy(player,new Coord(OUTER,0,2));
+
+        resultTop+= playerNullEnemy(player,new Coord(MIDDLE,1,0));
+        resultBottom+= playerNullEnemy(player,new Coord(MIDDLE,1,2));
+        resultLeft+= playerNullEnemy(player,new Coord(MIDDLE,0,1));
+        resultRight+= playerNullEnemy(player,new Coord(MIDDLE,0,2));
+
+        resultTop+= playerNullEnemy(player,new Coord(INNER,1,0));
+        resultBottom+= playerNullEnemy(player,new Coord(INNER,1,2));
+        resultLeft+= playerNullEnemy(player,new Coord(INNER,0,1));
+        resultRight+= playerNullEnemy(player,new Coord(INNER,0,2));
+
+        result+= (resultTop%3)/2 + (resultBottom%3)/2 + (resultLeft%3)/2 + (resultRight%3)/2;
+
+        return result;
+
+    }
+
+    private int playerNullEnemy(Player player, Coord coord){
+        Pawn pawn = get(coord);
+        if(pawn==null) return 0;
+        if(pawn.getPlayer()==player) return 1;
+        return -1;
+    }
 }

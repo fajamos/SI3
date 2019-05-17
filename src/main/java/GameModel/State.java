@@ -175,6 +175,7 @@ public class State {
         return null;
     }
 
+
     private Player enemy(){
         return turnOfPlayer == player1 ? player2 : player1;
     }

@@ -29,7 +29,7 @@ public class AIPlayer extends Player {
     public Player getClone(Player player, List<Pawn> pawns) {
         AIPlayer p = (AIPlayer) player;
 
-        return new AIPlayer(p.pawnsLeftToSet,pawns,p.scoring,p.turnDepth,player.pawnsToRemove,alphaBeta);
+        return new AIPlayer(p.pawnsLeftToSet,pawns,p.scoring,p.turnDepth,player.pawnsToRemove,p.alphaBeta);
     }
 
     public Turn getTurn(State state) {
